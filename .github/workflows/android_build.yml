@@ -5,7 +5,7 @@ on: [ push ]
 jobs:
 
 
-  jobBuild:
+  Build:
     runs-on: ubuntu-latest
     steps:
 
@@ -16,4 +16,4 @@ jobs:
           distribution: 'adopt'
           java-version: '15'
 
-      - run: bash ./gradlew clean ktlintCheck lint testDebugUnitTest build --stacktrace
+      - run: bash ./gradlew clean ktlintCheck lint testDebugUnitTest assembleDebug --stacktrace

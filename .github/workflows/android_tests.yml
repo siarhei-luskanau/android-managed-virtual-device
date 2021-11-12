@@ -4,12 +4,13 @@ on: [ push ]
 
 jobs:
 
-  jobAndroidTests:
+  AndroidTests:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ macos-latest, ubuntu-latest ]
+        android-api-level: [ 24, 28 ]
 
     steps:
 
@@ -22,7 +23,7 @@ jobs:
 
       - uses: ReactiveCircus/android-emulator-runner@v2
         with:
-          api-level: 28
+          api-level: ${{ matrix.android-api-level }}
           target: default
           arch: x86
           profile: Nexus 6
