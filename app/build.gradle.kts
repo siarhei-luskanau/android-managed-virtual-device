@@ -48,7 +48,7 @@ android {
             devices.create<com.android.build.api.dsl.ManagedVirtualDevice>("testEmulator30") {
                 device = "Pixel 2"
                 apiLevel = 30
-                systemImageSource = "aosp-atd"
+                systemImageSource = "google"
                 abi = "x86"
             }
         }
