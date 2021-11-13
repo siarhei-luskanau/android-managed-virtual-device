@@ -34,6 +34,25 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    testOptions {
+        emulatorSnapshots {
+            enableForTestFailures = false
+        }
+        devices {
+            devices.create<com.android.build.api.dsl.ManagedVirtualDevice>("testEmulator29") {
+                device = "Nexus 6"
+                apiLevel = 29
+                systemImageSource = "aosp"
+                abi = "x86"
+            }
+            devices.create<com.android.build.api.dsl.ManagedVirtualDevice>("testEmulator30") {
+                device = "Pixel 2"
+                apiLevel = 30
+                systemImageSource = "aosp-atd"
+                abi = "x86"
+            }
+        }
+    }
 }
 
 dependencies {

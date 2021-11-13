@@ -9,8 +9,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, ubuntu-latest ]
-        android-api-level: [ 24, 28 ]
+        os: [ macos-latest, ubuntu-latest, windows-latest ]
+        managed-virtual-devicel: [ testEmulator29, testEmulator30 ]
 
     steps:
 
@@ -21,12 +21,4 @@ jobs:
           distribution: 'adopt'
           java-version: '15'
 
-      - uses: ReactiveCircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.android-api-level }}
-          target: default
-          arch: x86
-          profile: Nexus 6
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
-          disable-animations: true
-          script: ./gradlew connectedAndroidTest
+      - run: bash ./gradlew ${{ matrix.managed-virtual-devicel }}Check --stacktrace
