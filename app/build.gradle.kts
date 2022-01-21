@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.ManagedVirtualDevice
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -38,27 +40,31 @@ android {
         emulatorSnapshots {
             enableForTestFailures = false
         }
-        devices {
-            devices.create<com.android.build.api.dsl.ManagedVirtualDevice>("testEmulator29") {
-                device = "Nexus 6"
-                apiLevel = 29
-                systemImageSource = "aosp"
-                abi = "x86"
-            }
-            devices.create<com.android.build.api.dsl.ManagedVirtualDevice>("testEmulator30") {
-                device = "Pixel 2"
-                apiLevel = 30
-                systemImageSource = "google"
-                abi = "x86"
+        listOf(26, 27, 28, 29, 30, 31, 32).forEach { apiLevelIt ->
+            listOf("google", "google-atd", "aosp", "aosp-atd").forEach { systemImageSourceIt ->
+                listOf("x86_64", "x86").forEach { abiIt ->
+                    val name = listOf(
+                        "managedVirtualDevice",
+                        apiLevelIt.toString(),
+                        systemImageSourceIt.capitalize(),
+                        abiIt.capitalize()
+                    ).joinToString(separator = "")
+                    devices.create<ManagedVirtualDevice>(name) {
+                        device = "Nexus 4"
+                        apiLevel = apiLevelIt
+                        systemImageSource = systemImageSourceIt
+                        abi = abiIt
+                    }
+                }
             }
         }
     }
 }
 
 dependencies {
-    implementation("com.google.android.material:material:1.6.0-alpha01")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
+    implementation("com.google.android.material:material:1.6.0-alpha02")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.4.0")
+    implementation("androidx.navigation:navigation-ui-ktx:2.4.0")
     testImplementation(kotlin("test"))
     androidTestImplementation(kotlin("test"))
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")

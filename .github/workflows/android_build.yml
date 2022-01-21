@@ -18,6 +18,6 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '15'
+          java-version: '11'
 
       - run: bash ./gradlew clean ktlintCheck lint testDebugUnitTest assembleDebug --stacktrace

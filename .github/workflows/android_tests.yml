@@ -4,21 +4,54 @@ on: [ push ]
 
 jobs:
 
-  AndroidTests:
-    runs-on: ${{ matrix.os }}
+  Device:
+    # runs-on: ${{ matrix.os }}
+    runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, ubuntu-latest, windows-latest ]
-        managed-virtual-devicel: [ testEmulator29, testEmulator30 ]
+        # os: [ macos-latest, ubuntu-latest ]
+        managed-virtual-devicel: [
+            26AospX86_64, # Failed to generate snapshot
+            26AospX86, # succeeded
+            # 26GoogleX86_64, # ! System image does not exist
+            # 26GoogleX86, # License Image not accepted
 
+            # 28AospX86_64, # License Image not accepted
+            # 28AospX86, # License Image not accepted
+            28GoogleX86_64, # Failed to generate snapshot
+            # 28GoogleX86, # License Image not accepted
+
+            29AospX86_64, # Failed to generate snapshot
+            29AospX86, # Failed to generate snapshot
+            29GoogleX86_64, # Failed to generate snapshot
+            29GoogleX86, # Failed to generate snapshot
+
+            30AospX86_64, # Failed to generate snapshot
+            # 30AospX86, # ! System image does not exist
+            # 30GoogleX86_64, # License Image not accepted
+            30GoogleX86, # Failed to generate snapshot
+
+            # 30Aosp-atdX86_64, # ! System image does not exist
+            # 30Aosp-atdX86, # License Image not accepted
+            # 30Google-atdX86_64, # ! System image does not exist
+            # 30Google-atdX86, # License Image not accepted
+
+            31AospX86_64, # Failed to generate snapshot
+            # 31AospX86, # ! System image does not exist
+            # 31GoogleX86_64, # ! System image does not exist
+            # 31GoogleX86, # ! System image does not exist
+
+            # 32AospX86_64, # ! System image does not exist
+            # 32AospX86, # ! System image does not exist
+            # 32GoogleX86_64, # ! System image does not exist
+            # 32GoogleX86, # License Image not accepted
+        ]
     steps:
-
       - uses: actions/checkout@v2
-
       - uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '15'
+          java-version: '11'
+      - run: bash ./gradlew managedVirtualDevice${{ matrix.managed-virtual-devicel }}Check --stacktrace
 
-      - run: bash ./gradlew ${{ matrix.managed-virtual-devicel }}Check --stacktrace
