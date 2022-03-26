@@ -20,4 +20,4 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
 
-      - run: bash ./gradlew clean ktlintCheck lint testDebugUnitTest assembleDebug --stacktrace
+      - run: bash ./gradlew clean ktlintCheck lint koverVerify koverReport koverMergedReport assembleDebug --stacktrace
