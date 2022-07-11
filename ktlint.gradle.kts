@@ -1,7 +1,7 @@
 val ktlint by configurations.creating
 
 dependencies {
-    ktlint("com.pinterest:ktlint:0.45.1") {
+    ktlint("com.pinterest:ktlint:0.46.1") {
         attributes {
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
         }

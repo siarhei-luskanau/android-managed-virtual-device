@@ -12,40 +12,45 @@ jobs:
       matrix:
         # os: [ macos-latest, ubuntu-latest ]
         managed-virtual-devicel: [
-            26AospX86_64, # Failed to generate snapshot
-            26AospX86, # succeeded
-            # 26GoogleX86_64, # ! System image does not exist
-            # 26GoogleX86, # License Image not accepted
+          27Aosp,
+          27Aosp64Bit,
+          27Google,
+          27Google64Bit,
 
-            # 28AospX86_64, # License Image not accepted
-            # 28AospX86, # License Image not accepted
-            28GoogleX86_64, # Failed to generate snapshot
-            # 28GoogleX86, # License Image not accepted
+          28Aosp,
+          28Aosp64Bit,
+          28Google,
+          28Google64Bit,
 
-            29AospX86_64, # Failed to generate snapshot
-            29AospX86, # Failed to generate snapshot
-            29GoogleX86_64, # Failed to generate snapshot
-            29GoogleX86, # Failed to generate snapshot
+          29Aosp,
+          29Aosp64Bit,
+          29Google,
+          29Google64Bit,
 
-            30AospX86_64, # Failed to generate snapshot
-            # 30AospX86, # ! System image does not exist
-            # 30GoogleX86_64, # License Image not accepted
-            30GoogleX86, # Failed to generate snapshot
+          30Aosp,
+          30Aosp64Bit,
+          30Google,
+          30Google64Bit,
 
-            # 30Aosp-atdX86_64, # ! System image does not exist
-            # 30Aosp-atdX86, # License Image not accepted
-            # 30Google-atdX86_64, # ! System image does not exist
-            # 30Google-atdX86, # License Image not accepted
+          30Aosp-atd,
+          30Aosp-atd64Bit,
+          30Google-atd,
+          30Google-atd64Bit,
 
-            31AospX86_64, # Failed to generate snapshot
-            # 31AospX86, # ! System image does not exist
-            # 31GoogleX86_64, # ! System image does not exist
-            # 31GoogleX86, # ! System image does not exist
+          31Aosp,
+          31Aosp64Bit,
+          31Google,
+          31Google64Bit,
 
-            # 32AospX86_64, # ! System image does not exist
-            # 32AospX86, # ! System image does not exist
-            # 32GoogleX86_64, # ! System image does not exist
-            # 32GoogleX86, # License Image not accepted
+          32Aosp,
+          32Aosp64Bit,
+          32Google,
+          32Google64Bit,
+
+          33Aosp,
+          33Aosp64Bit,
+          33Google,
+          33Google64Bit,
         ]
     steps:
       - uses: actions/checkout@v2

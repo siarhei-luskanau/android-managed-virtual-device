@@ -1,9 +1,9 @@
 package siarhei.luskanau.managed.virtual.device
 
 import androidx.test.platform.app.InstrumentationRegistry
+import org.junit.Assert.assertEquals
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import org.junit.Assert.assertEquals
 
 /**
  * Instrumented test, which will execute on an Android device.
