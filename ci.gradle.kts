@@ -12,7 +12,6 @@ tasks.register("ciBuildAll") {
             "lint",
             "koverVerify",
             "koverReport",
-            "koverMergedReport",
             "assembleDebug",
         )
     }
@@ -21,21 +20,24 @@ tasks.register("ciBuildAll") {
 tasks.register("ciEmulatorAll") {
     group = CI_GRADLE
     doLast {
-        listOf(27, 28, 29, 30, 31, 32, 33).forEach { apiLevelIt ->
-            listOf("google", "google-atd", "aosp", "aosp-atd").forEach { systemImageSourceIt ->
-                listOf("", "64Bit").forEach { require64BitVariant ->
-                    val name = listOf(
-                        "managedVirtualDevice",
-                        apiLevelIt.toString(),
-                        systemImageSourceIt.capitalize(),
-                        require64BitVariant.capitalize()
-                    ).joinToString(separator = "")
-                    try {
-                        gradlew("${name}Check")
-                    } catch (error: Throwable) {
-                        Error(name, error)
-                    }
+        val successfulDevices = mutableListOf<String>()
+        val errorDevices = mutableListOf<String>()
+        listOf(29, 30, 31, 32, 33).forEach { apiLevelIt ->
+            listOf("", "_64Bit").forEach { require64BitVariant ->
+                val name = listOf(
+                    "managedVirtualDevice",
+                    apiLevelIt.toString(),
+                    require64BitVariant.capitalize()
+                ).joinToString(separator = "")
+                try {
+                    gradlew("${name}Check")
+                    successfulDevices.add(name)
+                } catch (error: Throwable) {
+                    errorDevices.add(name)
+                    Error(name, error)
                 }
+                println("errorDevices: ${errorDevices}")
+                println("successfulDevices:\n${successfulDevices.joinToString(separator = "\n")}")
             }
         }
     }

@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.application") version "7.3.0-beta05" apply false
-    id("com.android.library") version "7.3.0-beta05" apply false
-    id("org.jetbrains.kotlin.android") version "1.7.0" apply false
-    id("org.jetbrains.kotlinx.kover") version "0.5.1"
+    id("com.android.application") version "7.3.0-rc01" apply false
+    id("com.android.library") version "7.3.0-rc01" apply false
+    id("org.jetbrains.kotlin.android") version "1.7.10" apply false
+    id("org.jetbrains.kotlinx.kover") version "0.6.0"
 }
 
 apply(from = "$rootDir/ci.gradle.kts")
@@ -13,9 +13,4 @@ allprojects {
 
 tasks.register("clean").configure {
     delete("build")
-}
-
-kover {
-    coverageEngine.set(kotlinx.kover.api.CoverageEngine.INTELLIJ)
-    // coverageEngine.set(kotlinx.kover.api.CoverageEngine.JACOCO)
 }

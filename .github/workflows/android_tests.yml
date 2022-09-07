@@ -12,45 +12,16 @@ jobs:
       matrix:
         # os: [ macos-latest, ubuntu-latest ]
         managed-virtual-devicel: [
-          27Aosp,
-          27Aosp64Bit,
-          27Google,
-          27Google64Bit,
-
-          28Aosp,
-          28Aosp64Bit,
-          28Google,
-          28Google64Bit,
-
-          29Aosp,
-          29Aosp64Bit,
-          29Google,
-          29Google64Bit,
-
-          30Aosp,
-          30Aosp64Bit,
-          30Google,
-          30Google64Bit,
-
-          30Aosp-atd,
-          30Aosp-atd64Bit,
-          30Google-atd,
-          30Google-atd64Bit,
-
-          31Aosp,
-          31Aosp64Bit,
-          31Google,
-          31Google64Bit,
-
-          32Aosp,
-          32Aosp64Bit,
-          32Google,
-          32Google64Bit,
-
-          33Aosp,
-          33Aosp64Bit,
-          33Google,
-          33Google64Bit,
+          29,
+          29_64Bit,
+          30,
+          30_64Bit,
+          31,
+          31_64Bit,
+          32,
+          32_64Bit,
+          33,
+          33_64Bit,
         ]
     steps:
       - uses: actions/checkout@v2
