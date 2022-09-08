@@ -23,22 +23,19 @@ tasks.register("ciEmulatorAll") {
         val successfulDevices = mutableListOf<String>()
         val errorDevices = mutableListOf<String>()
         listOf(29, 30, 31, 32, 33).forEach { apiLevelIt ->
-            listOf("", "_64Bit").forEach { require64BitVariant ->
-                val name = listOf(
-                    "managedVirtualDevice",
-                    apiLevelIt.toString(),
-                    require64BitVariant.capitalize()
-                ).joinToString(separator = "")
-                try {
-                    gradlew("${name}Check")
-                    successfulDevices.add(name)
-                } catch (error: Throwable) {
-                    errorDevices.add(name)
-                    Error(name, error)
-                }
-                println("errorDevices: ${errorDevices}")
-                println("successfulDevices:\n${successfulDevices.joinToString(separator = "\n")}")
+            val name = listOf(
+                "managedVirtualDevice",
+                apiLevelIt.toString()
+            ).joinToString(separator = "")
+            try {
+                gradlew("${name}Check")
+                successfulDevices.add(name)
+            } catch (error: Throwable) {
+                errorDevices.add(name)
+                Error(name, error)
             }
+            println("errorDevices: ${errorDevices}")
+            println("successfulDevices:\n${successfulDevices.joinToString(separator = "\n")}")
         }
     }
 }

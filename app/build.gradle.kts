@@ -42,17 +42,13 @@ android {
             enableForTestFailures = false
         }
         listOf(29, 30, 31, 32, 33).forEach { apiLevelIt ->
-            listOf("", "_64Bit").forEach { require64BitVariant ->
-                val name = listOf(
-                    "managedVirtualDevice",
-                    apiLevelIt.toString(),
-                    require64BitVariant.capitalize()
-                ).joinToString(separator = "")
-                managedDevices.devices.create<ManagedVirtualDevice>(name) {
-                    device = "Nexus 4"
-                    apiLevel = apiLevelIt
-                    require64Bit = require64BitVariant.isNotBlank()
-                }
+            val name = listOf(
+                "managedVirtualDevice",
+                apiLevelIt.toString()
+            ).joinToString(separator = "")
+            managedDevices.devices.create<ManagedVirtualDevice>(name) {
+                device = "Nexus 4"
+                apiLevel = apiLevelIt
             }
         }
     }
