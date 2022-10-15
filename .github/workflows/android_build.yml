@@ -4,20 +4,25 @@ on: [ push ]
 
 jobs:
 
-
   Build:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+#        os: [ self-hosted, macos-latest, ubuntu-latest, windows-latest ]
         os: [ macos-latest, ubuntu-latest, windows-latest ]
     steps:
 
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@v3
         with:
-          distribution: 'adopt'
-          java-version: '11'
+          distribution: 'temurin'
+          java-version: '17'
+        if: ${{ matrix.os != 'self-hosted' }}
 
-      - run: bash ./gradlew ciBuildAll --stacktrace
+      - uses: android-actions/setup-android@v2
+
+      - uses: gradle/gradle-build-action@v2
+        with:
+          arguments: ciBuildAll --stacktrace
