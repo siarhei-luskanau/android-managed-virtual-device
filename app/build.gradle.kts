@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+    namespace = "siarhei.luskanau.managed.virtual.device"
     compileSdk = 33
     buildToolsVersion = "33.0.0"
 
@@ -55,10 +56,10 @@ android {
 }
 
 dependencies {
-    implementation("com.google.android.material:material:1.8.0-alpha01")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.5.2")
-    implementation("androidx.navigation:navigation-ui-ktx:2.5.2")
+    implementation("com.google.android.material:material:1.7.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
+    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
     testImplementation(kotlin("test"))
     androidTestImplementation(kotlin("test"))
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0-beta01")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0-rc01")
 }

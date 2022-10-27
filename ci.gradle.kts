@@ -28,7 +28,10 @@ tasks.register("ciEmulatorAll") {
                 apiLevelIt.toString()
             ).joinToString(separator = "")
             try {
-                gradlew("${name}Check")
+                gradlew(
+                    "${name}Check",
+                    "-Pandroid.testInstrumentationRunnerArguments.class=siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest"
+                )
                 successfulDevices.add(name)
             } catch (error: Throwable) {
                 errorDevices.add(name)
