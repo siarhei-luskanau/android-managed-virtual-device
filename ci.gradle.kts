@@ -12,7 +12,7 @@ tasks.register("ciBuildAll") {
             "lint",
             "koverVerify",
             "koverReport",
-            "assembleDebug",
+            "assembleDebug"
         )
     }
 }
@@ -30,14 +30,15 @@ tasks.register("ciEmulatorAll") {
             try {
                 gradlew(
                     "${name}Check",
-                    "-Pandroid.testInstrumentationRunnerArguments.class=siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest"
+                    "-Pandroid.testInstrumentationRunnerArguments.class=" +
+                        "siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest"
                 )
                 successfulDevices.add(name)
             } catch (error: Throwable) {
                 errorDevices.add(name)
                 Error(name, error)
             }
-            println("errorDevices: ${errorDevices}")
+            println("errorDevices: $errorDevices")
             println("successfulDevices:\n${successfulDevices.joinToString(separator = "\n")}")
         }
     }
@@ -50,7 +51,7 @@ fun gradlew(
     exec {
         executable = File(
             project.rootDir,
-            if (Os.isFamily(Os.FAMILY_WINDOWS)) "gradlew.bat" else "gradlew",
+            if (Os.isFamily(Os.FAMILY_WINDOWS)) "gradlew.bat" else "gradlew"
         )
             .also { it.setExecutable(true) }
             .absolutePath

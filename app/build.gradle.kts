@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "siarhei.luskanau.managed.virtual.device"
     compileSdk = 33
-    buildToolsVersion = "33.0.0"
+    buildToolsVersion = "33.0.1"
 
     defaultConfig {
         applicationId = "siarhei.luskanau.managed.virtual.device"
@@ -24,7 +24,8 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
             )
         }
     }
@@ -61,5 +62,5 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
     testImplementation(kotlin("test"))
     androidTestImplementation(kotlin("test"))
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0-rc01")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
