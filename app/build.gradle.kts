@@ -40,6 +40,16 @@ android {
         viewBinding = true
     }
     testOptions {
+        unitTests {
+            all { test: Test ->
+                test.testLogging.events = setOf(
+                    org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
+                    org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
+                    org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
+                )
+            }
+        }
+        animationsDisabled = true
         emulatorSnapshots {
             enableForTestFailures = false
         }
@@ -57,7 +67,7 @@ android {
 }
 
 dependencies {
-    implementation("com.google.android.material:material:1.7.0")
+    implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
     implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
     testImplementation(kotlin("test"))

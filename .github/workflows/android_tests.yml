@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
 #        os: [ self-hosted, macos-latest ]
-        os: [ macos-latest, ubuntu-latest ]
+        os: [ macos-latest ]
         managed-virtual-devicel: [ 29, 30, 31, 32, 33 ]
     steps:
 
@@ -26,5 +26,5 @@ jobs:
 
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: managedVirtualDevice${{ matrix.managed-virtual-devicel }}Check -Pandroid.testInstrumentationRunnerArguments.class=siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest --stacktrace
+          arguments: managedVirtualDevice${{ matrix.managed-virtual-devicel }}Check -Pandroid.testInstrumentationRunnerArguments.class=siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect --stacktrace
 

@@ -31,7 +31,8 @@ tasks.register("ciEmulatorAll") {
                 gradlew(
                     "${name}Check",
                     "-Pandroid.testInstrumentationRunnerArguments.class=" +
-                        "siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest"
+                        "siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest",
+                    "-Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect"
                 )
                 successfulDevices.add(name)
             } catch (error: Throwable) {
