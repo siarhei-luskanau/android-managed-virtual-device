@@ -20,28 +20,19 @@ tasks.register("ciBuildAll") {
 tasks.register("ciEmulatorAll") {
     group = CI_GRADLE
     doLast {
-        val successfulDevices = mutableListOf<String>()
-        val errorDevices = mutableListOf<String>()
         listOf(29, 30, 31, 32, 33).forEach { apiLevelIt ->
             val name = listOf(
                 "managedVirtualDevice",
                 apiLevelIt.toString()
             ).joinToString(separator = "")
-            try {
-                gradlew(
-                    "${name}Check",
-                    "-Pandroid.testInstrumentationRunnerArguments.class=" +
-                        "siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest",
-                    "-Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect"
-                )
-                successfulDevices.add(name)
-            } catch (error: Throwable) {
-                errorDevices.add(name)
-                Error(name, error)
-            }
-            println("errorDevices: $errorDevices")
-            println("successfulDevices:\n${successfulDevices.joinToString(separator = "\n")}")
+            gradlew(
+                "${name}Check",
+                "-Pandroid.testInstrumentationRunnerArguments.class=" +
+                    "siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest",
+                "-Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect"
+            )
         }
+        gradlew("cleanManagedDevices")
     }
 }
 
