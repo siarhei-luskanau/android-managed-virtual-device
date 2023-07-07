@@ -2,34 +2,47 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 val CI_GRADLE = "CI_GRADLE"
 
-tasks.register("ciBuildAll") {
+tasks.register("devAll") {
     group = CI_GRADLE
     doLast {
         gradlew(
             "clean",
             "ktlintFormat",
+        )
+        gradlew("ciBuildAndTest")
+        gradlew("devEmulatorAll")
+    }
+}
+
+tasks.register("ciBuildAndTest") {
+    group = CI_GRADLE
+    doLast {
+        gradlew(
+            "clean",
             "ktlintCheck",
+            "detekt",
             "lint",
             "koverVerify",
-            "koverReport",
-            "assembleDebug"
+            "koverXmlReport",
+            "koverHtmlReport",
+            "assembleDebug",
         )
     }
 }
 
-tasks.register("ciEmulatorAll") {
+tasks.register("devEmulatorAll") {
     group = CI_GRADLE
     doLast {
-        listOf(29, 30, 31, 32, 33).forEach { apiLevelIt ->
+        listOf(29, 30, 31, 32, 33, 34).forEach { apiLevelIt ->
             val name = listOf(
                 "managedVirtualDevice",
-                apiLevelIt.toString()
+                apiLevelIt.toString(),
             ).joinToString(separator = "")
             gradlew(
                 "${name}Check",
                 "-Pandroid.testInstrumentationRunnerArguments.class=" +
                     "siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest",
-                "-Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect"
+                "-Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect",
             )
         }
         gradlew("cleanManagedDevices")
@@ -38,12 +51,12 @@ tasks.register("ciEmulatorAll") {
 
 fun gradlew(
     vararg tasks: String,
-    addToEnvironment: Map<String, String>? = null
+    addToEnvironment: Map<String, String>? = null,
 ) {
     exec {
         executable = File(
             project.rootDir,
-            if (Os.isFamily(Os.FAMILY_WINDOWS)) "gradlew.bat" else "gradlew"
+            if (Os.isFamily(Os.FAMILY_WINDOWS)) "gradlew.bat" else "gradlew",
         )
             .also { it.setExecutable(true) }
             .absolutePath

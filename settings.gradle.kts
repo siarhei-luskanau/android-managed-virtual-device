@@ -14,5 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "android-managed-virtual-device"
 include(
-    ":app"
+    ":app",
 )

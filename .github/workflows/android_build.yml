@@ -4,12 +4,12 @@ on: [ push ]
 
 jobs:
 
-  Build:
+  BuildAndTest:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-#        os: [ self-hosted, macos-latest, ubuntu-latest, windows-latest ]
+        # os: [ self-hosted, macos-latest, ubuntu-latest, windows-latest ]
         os: [ macos-latest, ubuntu-latest, windows-latest ]
     steps:
 
@@ -25,7 +25,7 @@ jobs:
 
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: ciBuildAll --stacktrace
+          arguments: ciBuildAndTest --stacktrace
 
   Device:
     runs-on: ${{ matrix.os }}
@@ -34,7 +34,7 @@ jobs:
       matrix:
         #        os: [ self-hosted, macos-latest ]
         os: [ macos-latest ]
-        managed-virtual-devicel: [ 29, 30, 31, 32, 33 ]
+        managed-virtual-device: [ 29, 30, 31, 32, 33, 34 ]
     steps:
 
       - uses: actions/checkout@v3
@@ -49,4 +49,4 @@ jobs:
 
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: managedVirtualDevice${{ matrix.managed-virtual-devicel }}Check -Pandroid.testInstrumentationRunnerArguments.class=siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect --stacktrace
+          arguments: managedVirtualDevice${{ matrix.managed-virtual-device }}Check -Pandroid.testInstrumentationRunnerArguments.class=siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect --stacktrace
