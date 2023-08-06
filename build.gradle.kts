@@ -1,16 +1,16 @@
 plugins {
-    val agpVersion = "8.2.0-alpha10"
-    id("com.android.application") version agpVersion apply false
-    id("com.android.library") version agpVersion apply false
-    id("org.jetbrains.kotlin.android") version "1.9.0" apply false
-    id("org.jetbrains.kotlinx.kover") version "0.7.2"
-    id("io.gitlab.arturbosch.detekt") version "1.23.0"
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlinx.kover)
 }
 
 apply(from = "$rootDir/ci.gradle.kts")
 
 allprojects {
     apply(from = "$rootDir/ktlint.gradle.kts")
+    apply(plugin = "io.gitlab.arturbosch.detekt")
 }
 
 tasks.register("clean").configure {

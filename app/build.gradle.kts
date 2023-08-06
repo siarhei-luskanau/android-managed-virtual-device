@@ -29,11 +29,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.valueOf(libs.versions.build.javaVersion.get())
+        targetCompatibility = JavaVersion.valueOf(libs.versions.build.javaVersion.get())
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = libs.versions.build.jvmTarget.get()
     }
     buildFeatures {
         viewBinding = true
@@ -66,10 +66,10 @@ android {
 }
 
 dependencies {
-    implementation("com.google.android.material:material:1.9.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.6.0")
+    implementation(libs.android.material)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
     testImplementation(kotlin("test"))
     androidTestImplementation(kotlin("test"))
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation(libs.espresso.core)
 }
