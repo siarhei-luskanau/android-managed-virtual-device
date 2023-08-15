@@ -22,9 +22,9 @@ tasks.register("ciBuildAndTest") {
             "ktlintCheck",
             "detekt",
             "lint",
-            "koverVerify",
-            "koverXmlReport",
-            "koverHtmlReport",
+            "koverXmlReportDebug",
+            "koverHtmlReportDebug",
+            "koverVerifyDebug",
             "assembleDebug",
         )
     }

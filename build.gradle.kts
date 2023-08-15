@@ -13,6 +13,22 @@ allprojects {
     apply(plugin = "io.gitlab.arturbosch.detekt")
 }
 
+koverReport {
+    verify {
+        rule {
+            minBound(95)
+            maxBound(98)
+        }
+    }
+}
+
+subprojects {
+    apply(plugin = "org.jetbrains.kotlinx.kover")
+    dependencies {
+        kover(project(path))
+    }
+}
+
 tasks.register("clean").configure {
     delete("build")
 }

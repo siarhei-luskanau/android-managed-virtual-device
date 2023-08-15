@@ -1,8 +1,8 @@
 [versions]
-agp = "8.2.0-alpha15"
+agp = "8.2.0-alpha16"
 android-material = "1.9.0"
-androidx-navigation = "2.6.0"
-androidx-test-espresso = "3.5.1"
+androidx-navigation = "2.7.0"
+androidx-test-espresso = "3.6.0-alpha01"
 build-android-compileSdk = "34"
 build-android-minSdk = "21"
 build-android-targetSdk = "34"
