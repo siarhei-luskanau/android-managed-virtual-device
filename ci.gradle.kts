@@ -34,16 +34,18 @@ tasks.register("ciBuildAndTest") {
 tasks.register("devEmulatorAll") {
     group = CI_GRADLE
     doLast {
-        listOf(29, 30, 31, 32, 33, 34).forEach { apiLevelIt ->
+        gradlew("cleanManagedDevices", "--unused-only")
+        (27..34).forEach { apiLevelIt ->
             val name = listOf(
                 "managedVirtualDevice",
                 apiLevelIt.toString(),
             ).joinToString(separator = "")
             gradlew(
-                "${name}Check",
+                "${name}DebugAndroidTest",
                 "-Pandroid.testInstrumentationRunnerArguments.class=" +
                     "siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest",
                 "-Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect",
+                "--enable-display",
             )
         }
         gradlew("cleanManagedDevices")
@@ -95,6 +97,6 @@ fun gradlew(
                 put("ANDROID_HOME", "$sdkDirPath")
             }
         }
-        println("commandLine: ${this.commandLine}")
+        println("commandLine: ${this.commandLine.joinToString(separator = " ")}")
     }.apply { println("ExecResult: $this") }
 }

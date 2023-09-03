@@ -15,6 +15,9 @@ jobs:
 
       - uses: actions/checkout@v3
 
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -34,10 +37,13 @@ jobs:
       matrix:
         #        os: [ self-hosted, macos-latest ]
         os: [ macos-latest ]
-        managed-virtual-device: [ 29, 30, 31, 32, 33, 34 ]
+        managed-virtual-device: [ 27, 28, 29, 30, 31, 32, 33, 34 ]
     steps:
 
       - uses: actions/checkout@v3
+
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
       - uses: actions/setup-java@v3
         with:
@@ -49,4 +55,8 @@ jobs:
 
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: managedVirtualDevice${{ matrix.managed-virtual-device }}Check -Pandroid.testInstrumentationRunnerArguments.class=siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect --stacktrace
+          arguments: managedVirtualDevice${{ matrix.managed-virtual-device }}DebugAndroidTest
+            --no-parallel --max-workers=1
+            -Pandroid.testInstrumentationRunnerArguments.class=siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest 
+            -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
+            --stacktrace

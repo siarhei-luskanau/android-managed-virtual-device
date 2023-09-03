@@ -52,7 +52,7 @@ android {
         emulatorSnapshots {
             enableForTestFailures = false
         }
-        listOf(29, 30, 31, 32, 33, 34).forEach { apiLevelIt ->
+        (27..34).forEach { apiLevelIt ->
             val name = listOf(
                 "managedVirtualDevice",
                 apiLevelIt.toString(),
