@@ -10,7 +10,6 @@ import kotlin.test.assertEquals
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleInstrumentedTest {
-
     @Test
     fun useAppContext() {
         // Context of the app under test.

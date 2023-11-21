@@ -1,22 +1,24 @@
 [versions]
-agp = "8.3.0-alpha07"
+agp = "8.2.0-rc03"
 android-material = "1.10.0"
-androidx-navigation = "2.7.4"
+androidx-navigation = "2.7.5"
 androidx-test-espresso = "3.6.0-alpha01"
 build-android-compileSdk = "34"
 build-android-minSdk = "21"
 build-android-targetSdk = "34"
 build-javaVersion = "VERSION_17"
 build-jvmTarget = "17"
-detekt = "1.23.1"
-kotlin = "1.9.10"
+detekt = "1.23.3"
+kotlin = "1.9.20"
 kotlinx-kover = "0.7.4"
+ktlint = "1.0.1"
 
 [libraries]
 android-material = { module = "com.google.android.material:material", version.ref = "android-material" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation" }
 espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-test-espresso" }
+ktlint-cli = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

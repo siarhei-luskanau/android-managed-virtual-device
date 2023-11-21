@@ -9,8 +9,9 @@ plugins {
 apply(from = "$rootDir/ci.gradle.kts")
 
 allprojects {
-    apply(from = "$rootDir/ktlint.gradle.kts")
+    apply(from = "$rootDir/ktlint.gradle")
     apply(plugin = "io.gitlab.arturbosch.detekt")
+    apply(plugin = "org.jetbrains.kotlinx.kover")
 }
 
 koverReport {
@@ -23,7 +24,6 @@ koverReport {
 }
 
 subprojects {
-    apply(plugin = "org.jetbrains.kotlinx.kover")
     dependencies {
         kover(project(path))
     }

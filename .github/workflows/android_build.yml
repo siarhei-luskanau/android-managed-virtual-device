@@ -24,8 +24,6 @@ jobs:
           java-version: '17'
         if: ${{ matrix.os != 'self-hosted' }}
 
-      - uses: android-actions/setup-android@v2
-
       - uses: gradle/gradle-build-action@v2
         with:
           arguments: ciBuildAndTest --stacktrace
@@ -51,12 +49,14 @@ jobs:
           java-version: '17'
         if: ${{ matrix.os != 'self-hosted' }}
 
-      - uses: android-actions/setup-android@v2
+      - uses: gradle/gradle-build-action@v2
+        with:
+          arguments: ciSdkManagerLicenses --stacktrace
 
       - uses: gradle/gradle-build-action@v2
         with:
           arguments: managedVirtualDevice${{ matrix.managed-virtual-device }}DebugAndroidTest
             --no-parallel --max-workers=1
-            -Pandroid.testInstrumentationRunnerArguments.class=siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest 
+            -Pandroid.testInstrumentationRunnerArguments.class=siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest
             -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
             --stacktrace

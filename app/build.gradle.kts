@@ -24,7 +24,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
+                "proguard-rules.pro"
             )
         }
     }
@@ -41,11 +41,12 @@ android {
     testOptions {
         unitTests {
             all { test: Test ->
-                test.testLogging.events = setOf(
-                    org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
-                    org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
-                    org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
-                )
+                test.testLogging.events =
+                    setOf(
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
+                    )
             }
         }
         animationsDisabled = true
@@ -53,10 +54,11 @@ android {
             enableForTestFailures = false
         }
         (27..34).forEach { apiLevelIt ->
-            val name = listOf(
-                "managedVirtualDevice",
-                apiLevelIt.toString(),
-            ).joinToString(separator = "")
+            val name =
+                listOf(
+                    "managedVirtualDevice",
+                    apiLevelIt.toString()
+                ).joinToString(separator = "")
             managedDevices.devices.create<ManagedVirtualDevice>(name) {
                 device = "Nexus 4"
                 apiLevel = apiLevelIt
