@@ -6,18 +6,6 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 val CI_GRADLE = "CI_GRADLE"
 
-tasks.register("devAll") {
-    group = CI_GRADLE
-    doLast {
-        gradlew(
-            "clean",
-            "ktlintFormat"
-        )
-        gradlew("ciBuildAndTest")
-        gradlew("devEmulatorAll")
-    }
-}
-
 tasks.register("ciBuildAndTest") {
     group = CI_GRADLE
     doLast {
@@ -61,6 +49,17 @@ tasks.register("ciSdkManagerLicenses") {
                 println("exec: ${this.commandLine.joinToString(separator = " ")}")
             }.apply { println("ExecResult: $this") }
         }
+    }
+}
+
+tasks.register("devAll") {
+    group = CI_GRADLE
+    doLast {
+        gradlew(
+            "clean",
+            "ktlintFormat",
+            "ciBuildAndTest"
+        )
     }
 }
 
