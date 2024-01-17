@@ -12,18 +12,18 @@ import siarhei.luskanau.managed.virtual.device.databinding.FragmentSecondBinding
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 class SecondFragment : Fragment() {
-    private var _binding: FragmentSecondBinding? = null
+    private var bindingLocal: FragmentSecondBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
+    private val binding get() = bindingLocal!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentSecondBinding.inflate(inflater, container, false)
+    ): View {
+        bindingLocal = FragmentSecondBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -37,6 +37,6 @@ class SecondFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        bindingLocal = null
     }
 }
