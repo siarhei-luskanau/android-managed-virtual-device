@@ -24,7 +24,7 @@ jobs:
           java-version: '17'
         if: ${{ matrix.os != 'self-hosted' }}
 
-      - uses: gradle/gradle-build-action@v2
+      - uses: gradle/gradle-build-action@v3
         with:
           arguments: ciBuildAndTest --stacktrace
 
@@ -49,11 +49,11 @@ jobs:
           java-version: '17'
         if: ${{ matrix.os != 'self-hosted' }}
 
-      - uses: gradle/gradle-build-action@v2
+      - uses: gradle/gradle-build-action@v3
         with:
           arguments: ciSdkManagerLicenses --stacktrace
 
-      - uses: gradle/gradle-build-action@v2
+      - uses: gradle/gradle-build-action@v3
         with:
           arguments: managedVirtualDevice${{ matrix.managed-virtual-device }}DebugAndroidTest
             --no-parallel --max-workers=1
