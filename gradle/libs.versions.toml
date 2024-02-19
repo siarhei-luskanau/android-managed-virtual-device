@@ -2,7 +2,7 @@
 agp = "8.2.1"
 android-material = "1.11.0"
 androidx-navigation = "2.7.6"
-androidx-test-espresso = "3.6.0-alpha02"
+androidx-test-espresso = "3.6.0-alpha03"
 build-android-compileSdk = "34"
 build-android-minSdk = "21"
 build-android-targetSdk = "34"
