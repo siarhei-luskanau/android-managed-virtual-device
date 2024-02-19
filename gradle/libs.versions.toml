@@ -10,7 +10,7 @@ build-javaVersion = "VERSION_17"
 build-jvmTarget = "17"
 detekt = "1.23.5"
 kotlin = "1.9.22"
-kotlinx-kover = "0.7.5"
+kotlinx-kover = "0.7.6"
 ktlint = "1.1.1"
 
 [libraries]
