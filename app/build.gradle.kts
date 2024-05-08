@@ -62,6 +62,12 @@ android {
             managedDevices.devices.create<ManagedVirtualDevice>(name) {
                 device = "Nexus 4"
                 apiLevel = apiLevelIt
+                val systemImageConfig: Pair<String?, Boolean?> = when (apiLevelIt) {
+                    34 -> "aosp-atd" to true
+                    else -> null to null
+                }
+                systemImageConfig.first?.also { systemImageSource = it }
+                systemImageConfig.second?.also { require64Bit = it }
             }
         }
     }
