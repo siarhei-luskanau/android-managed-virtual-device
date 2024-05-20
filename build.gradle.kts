@@ -14,11 +14,13 @@ allprojects {
     apply(plugin = "org.jetbrains.kotlinx.kover")
 }
 
-koverReport {
-    verify {
-        rule {
-            minBound(95)
-            maxBound(98)
+kover {
+    reports {
+        verify {
+            rule {
+                minBound(95)
+                maxBound(98)
+            }
         }
     }
 }
