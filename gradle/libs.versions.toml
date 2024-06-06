@@ -11,7 +11,7 @@ build-jvmTarget = "17"
 detekt = "1.23.6"
 kotlin = "2.0.0"
 kotlinx-kover = "0.8.0"
-ktlint = "1.2.1"
+ktlint = "1.3.0"
 
 [libraries]
 android-material = { module = "com.google.android.material:material", version.ref = "android-material" }
