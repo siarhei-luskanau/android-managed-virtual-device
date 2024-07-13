@@ -65,7 +65,7 @@ android {
                 apiLevel = apiLevelIt
                 val systemImageConfig: Pair<String?, Boolean?> = when (apiLevel) {
                     30, 33, 34 -> "aosp" to true
-                    35 -> "google" to null
+                    35 -> "google" to true
                     else -> null to null
                 }
                 systemImageConfig.first?.also { systemImageSource = it }
