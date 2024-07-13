@@ -30,7 +30,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        managed-virtual-device: [ 27, 28, 29, 30, 31, 32, 33, 34 ]
+        managed-virtual-device: [ 27, 28, 29, 30, 31, 32, 33, 34, 35 ]
     steps:
 
       - uses: actions/checkout@v4
