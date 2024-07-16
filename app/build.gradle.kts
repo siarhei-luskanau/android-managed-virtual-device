@@ -63,7 +63,7 @@ android {
                 device = "Nexus 4"
                 apiLevel = apiLevelIt
                 val systemImageConfig: Pair<String?, Boolean?> = when (apiLevel) {
-                    34 -> "aosp-atd" to true
+                    33, 34 -> "aosp" to true
                     else -> null to null
                 }
                 systemImageConfig.first?.also { systemImageSource = it }
