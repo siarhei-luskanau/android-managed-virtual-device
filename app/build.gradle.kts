@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "siarhei.luskanau.managed.virtual.device"
-    compileSdk = 34
+    compileSdk = libs.versions.build.android.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "siarhei.luskanau.managed.virtual.device"
-        minSdk = 24
-        targetSdk = 34
+        minSdk = libs.versions.build.android.minSdk.get().toInt()
+        targetSdk = libs.versions.build.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
 
@@ -53,7 +53,7 @@ android {
         emulatorSnapshots {
             enableForTestFailures = false
         }
-        (27..34).forEach { apiLevelIt ->
+        (27..35).forEach { apiLevelIt ->
             val name =
                 listOf(
                     "managedVirtualDevice",
@@ -64,6 +64,7 @@ android {
                 apiLevel = apiLevelIt
                 val systemImageConfig: Pair<String?, Boolean?> = when (apiLevel) {
                     33, 34 -> "aosp" to true
+                    35 -> "google" to null
                     else -> null to null
                 }
                 systemImageConfig.first?.also { systemImageSource = it }
