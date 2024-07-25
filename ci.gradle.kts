@@ -68,7 +68,7 @@ tasks.register("devEmulatorAll") {
     doLast {
         gradlew("ciSdkManagerLicenses")
         gradlew("cleanManagedDevices", "--unused-only")
-        (27..34).forEach { apiLevelIt ->
+        (27..35).forEach { apiLevelIt ->
             val name =
                 listOf(
                     "managedVirtualDevice",
