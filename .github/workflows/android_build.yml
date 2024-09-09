@@ -54,5 +54,4 @@ jobs:
 
       - run: ./gradlew managedVirtualDevice${{ matrix.managed-virtual-device }}DebugAndroidTest
             -Pandroid.testInstrumentationRunnerArguments.class=siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest
-            -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
-            --no-parallel --max-workers=1 --stacktrace
+            --stacktrace
