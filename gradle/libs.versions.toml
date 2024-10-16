@@ -1,5 +1,5 @@
 [versions]
-activity = "1.9.2"
+activity = "1.9.3"
 agp = "8.7.1"
 build-android-compileSdk = "35"
 build-android-minSdk = "26"
