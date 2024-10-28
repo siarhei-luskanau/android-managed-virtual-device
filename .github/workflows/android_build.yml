@@ -2,6 +2,9 @@ name: Android build
 
 on: [ push ]
 
+env:
+  JAVA_VERSION: 21
+
 jobs:
 
   BuildAndTest:
@@ -17,7 +20,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'
+          java-version: ${{ env.JAVA_VERSION }}
         if: ${{ matrix.os != 'self-hosted' }}
 
       - uses: gradle/actions/setup-gradle@v4
@@ -26,11 +29,21 @@ jobs:
 
   Device:
     runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest ]
         managed-virtual-device: [ 27, 28, 29, 30, 31, 32, 33, 34 ]
+        experimental: [ false ]
+        os: [ ubuntu-latest ]
+        include:
+          - managed-virtual-device: 35
+            experimental: true
+            os: ubuntu-latest
+          - managed-virtual-device: 35
+            experimental: true
+            os: macos-latest
+
     steps:
 
       - uses: actions/checkout@v4
@@ -45,7 +58,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'
+          java-version: ${{ env.JAVA_VERSION }}
         if: ${{ matrix.os != 'self-hosted' }}
 
       - uses: gradle/actions/setup-gradle@v4
@@ -53,6 +66,6 @@ jobs:
       - run: ./gradlew ciSdkManagerLicenses --stacktrace
 
       - run: ./gradlew managedVirtualDevice${{ matrix.managed-virtual-device }}DebugAndroidTest
-            -Pandroid.testInstrumentationRunnerArguments.class=siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest
-            -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
-            --stacktrace
+          -Pandroid.testInstrumentationRunnerArguments.class=siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest
+          -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
+          --stacktrace
