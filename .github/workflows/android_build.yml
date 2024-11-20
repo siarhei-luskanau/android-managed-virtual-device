@@ -1,6 +1,12 @@
 name: Android build
 
-on: [ push ]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 env:
   JAVA_VERSION: 21
@@ -26,6 +32,9 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       - run: ./gradlew ciBuildAndTest --stacktrace
+
+      - name: Update Gradle Wrapper
+        uses: gradle-update/update-gradle-wrapper-action@v2
 
   Device:
     runs-on: ${{ matrix.os }}
