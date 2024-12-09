@@ -48,9 +48,6 @@ jobs:
           - managed-virtual-device: 35
             experimental: true
             os: ubuntu-latest
-          - managed-virtual-device: 35
-            experimental: true
-            os: macos-latest
 
     steps:
 
