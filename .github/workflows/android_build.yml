@@ -10,6 +10,7 @@ on:
 
 env:
   JAVA_VERSION: 21
+  JAVA_DISTRIBUTION: 'temurin'
 
 jobs:
 
@@ -23,7 +24,7 @@ jobs:
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
         if: ${{ matrix.os != 'self-hosted' }}
 
@@ -62,7 +63,7 @@ jobs:
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
         if: ${{ matrix.os != 'self-hosted' }}
 
