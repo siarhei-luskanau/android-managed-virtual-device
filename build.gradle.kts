@@ -120,51 +120,40 @@ tasks.register("devEmulatorAll") {
 
 fun gradlew(vararg tasks: String, addToSystemProperties: Map<String, String>? = null) {
     providers.exec {
-        executable =
-            File(
-                project.rootDir,
-                if (Os.isFamily(Os.FAMILY_WINDOWS)) "gradlew.bat" else "gradlew"
-            )
-                .also { it.setExecutable(true) }
-                .absolutePath
-        args =
-            mutableListOf<String>().also { mutableArgs ->
-                mutableArgs.addAll(tasks)
-                addToSystemProperties?.toList()?.map { "-D${it.first}=${it.second}" }?.let {
-                    mutableArgs.addAll(it)
-                }
-                mutableArgs.add("--stacktrace")
+        executable = File(
+            project.rootDir,
+            if (Os.isFamily(Os.FAMILY_WINDOWS)) "gradlew.bat" else "gradlew"
+        )
+            .also { it.setExecutable(true) }
+            .absolutePath
+        args = mutableListOf<String>().also { mutableArgs ->
+            mutableArgs.addAll(tasks)
+            addToSystemProperties?.toList()?.map { "-D${it.first}=${it.second}" }?.let {
+                mutableArgs.addAll(it)
             }
-        val sdkDirPath =
-            Properties().apply {
-                val propertiesFile = File(rootDir, "local.properties")
-                if (propertiesFile.exists()) {
-                    load(propertiesFile.inputStream())
-                }
-            }.getProperty("sdk.dir")
+            mutableArgs.add("--stacktrace")
+        }
+        val sdkDirPath = Properties().apply {
+            val propertiesFile = File(rootDir, "local.properties")
+            if (propertiesFile.exists()) {
+                load(propertiesFile.inputStream())
+            }
+        }.getProperty("sdk.dir")
         if (sdkDirPath != null) {
-            val platformToolsDir = "$sdkDirPath${java.io.File.separator}platform-tools"
+            val platformToolsDir = "$sdkDirPath${File.separator}platform-tools"
             val pahtEnvironment = System.getenv("PATH").orEmpty()
             if (!pahtEnvironment.contains(platformToolsDir)) {
-                environment =
-                    environment.toMutableMap().apply {
-                        put("PATH", "$platformToolsDir:$pahtEnvironment")
-                    }
+                environment = environment.toMutableMap()
+                    .apply { put("PATH", "$platformToolsDir:$pahtEnvironment") }
             }
         }
         if (System.getenv("JAVA_HOME") == null) {
             System.getProperty("java.home")?.let { javaHome ->
-                environment =
-                    environment.toMutableMap().apply {
-                        put("JAVA_HOME", javaHome)
-                    }
+                environment = environment.toMutableMap().apply { put("JAVA_HOME", javaHome) }
             }
         }
         if (System.getenv("ANDROID_HOME") == null) {
-            environment =
-                environment.toMutableMap().apply {
-                    put("ANDROID_HOME", "$sdkDirPath")
-                }
+            environment = environment.toMutableMap().apply { put("ANDROID_HOME", sdkDirPath) }
         }
         println("commandLine: ${this.commandLine.joinToString(separator = " ")}")
     }.apply { println("ExecResult: ${this.result.get()}") }
@@ -182,10 +171,9 @@ fun getAndroidSdkPath(rootDir: File): String? = Properties().apply {
 fun getSdkManagerFile(rootDir: File): File? =
     getAndroidSdkPath(rootDir = rootDir)?.let { sdkDirPath ->
         println("sdkDirPath: $sdkDirPath")
-        val files =
-            File(sdkDirPath).walk().filter { file ->
-                file.path.contains("cmdline-tools") && file.path.endsWith("sdkmanager")
-            }
+        val files = File(sdkDirPath).walk().filter { file ->
+            file.path.contains("cmdline-tools") && file.path.endsWith("sdkmanager")
+        }
         files.forEach { println("walk: ${it.absolutePath}") }
         val sdkmanagerFile = files.firstOrNull()
         println("sdkmanagerFile: $sdkmanagerFile")
