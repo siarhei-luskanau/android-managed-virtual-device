@@ -37,11 +37,12 @@ tasks.register("ciSdkManagerLicenses") {
 
                     override fun read(): Int = yesString[counter % 2].also { counter++ }.code
                 }
-            exec {
+            providers.exec {
                 executable = sdkmanagerFile.absolutePath
                 args = listOf("--list", "--sdk_root=$sdkDirPath")
                 println("exec: ${this.commandLine.joinToString(separator = " ")}")
-            }.apply { println("ExecResult: $this") }
+            }.apply { println("ExecResult: ${this.result.get()}") }
+            @Suppress("DEPRECATION")
             exec {
                 executable = sdkmanagerFile.absolutePath
                 args = listOf("--licenses", "--sdk_root=$sdkDirPath")
@@ -87,7 +88,7 @@ tasks.register("devEmulatorAll") {
 }
 
 fun gradlew(vararg tasks: String, addToSystemProperties: Map<String, String>? = null) {
-    exec {
+    providers.exec {
         executable =
             File(
                 project.rootDir,
@@ -135,7 +136,7 @@ fun gradlew(vararg tasks: String, addToSystemProperties: Map<String, String>? = 
                 }
         }
         println("commandLine: ${this.commandLine.joinToString(separator = " ")}")
-    }.apply { println("ExecResult: $this") }
+    }.apply { println("ExecResult: ${this.result.get()}") }
 }
 
 fun getAndroidSdkPath(rootDir: File): String? = Properties().apply {
