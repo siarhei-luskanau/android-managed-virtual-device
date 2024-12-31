@@ -44,6 +44,8 @@ android {
             all { test: Test ->
                 test.testLogging.events =
                     org.gradle.api.tasks.testing.logging.TestLogEvent.values().toSet()
+                test.testLogging.exceptionFormat =
+                    org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
             }
         }
         animationsDisabled = true
