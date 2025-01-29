@@ -9,7 +9,7 @@ build-jvmTarget = "21"
 compose-bom = "2025.01.00"
 detekt = "1.23.7"
 espresso = "3.6.1"
-kotlin = "2.1.20-Beta1"
+kotlin = "2.1.20-Beta2"
 kotlinx-kover = "0.9.1"
 ktlint = "1.5.0"
 
