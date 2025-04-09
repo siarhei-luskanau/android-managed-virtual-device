@@ -52,17 +52,17 @@ android {
         emulatorSnapshots {
             enableForTestFailures = false
         }
-        (27..35).forEach { apiLevelIt ->
+        (27..36).forEach { apiLevelIt ->
             val name =
                 listOf(
                     "managedVirtualDevice",
                     apiLevelIt.toString()
                 ).joinToString(separator = "")
-            managedDevices.devices.create<ManagedVirtualDevice>(name) {
+            managedDevices.allDevices.create<ManagedVirtualDevice>(name) {
                 device = "Nexus 4"
                 apiLevel = apiLevelIt
                 val systemImageConfig: Pair<String?, Boolean?> = when (apiLevel) {
-                    30, 33, 34, 35 -> "aosp" to true
+                    35, 36 -> "aosp" to true
                     else -> null to null
                 }
                 systemImageConfig.first?.also { systemImageSource = it }
