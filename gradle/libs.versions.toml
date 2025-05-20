@@ -11,7 +11,7 @@ detekt = "1.23.8"
 espresso = "3.6.1"
 kotlin = "2.1.21"
 kotlinx-kover = "0.9.1"
-ktlint = "1.5.0"
+ktlint = "1.6.0"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
