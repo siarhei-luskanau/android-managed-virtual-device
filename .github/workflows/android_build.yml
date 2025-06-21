@@ -53,7 +53,7 @@ jobs:
         os: [ ubuntu-latest ]
         include:
           - managed-virtual-device: 36
-            experimental: true
+            experimental: false
             os: ubuntu-latest
 
     steps:

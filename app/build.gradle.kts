@@ -1,5 +1,3 @@
-import com.android.build.api.dsl.ManagedVirtualDevice
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -58,15 +56,9 @@ android {
                     "managedVirtualDevice",
                     apiLevelIt.toString()
                 ).joinToString(separator = "")
-            managedDevices.allDevices.create<ManagedVirtualDevice>(name) {
+            managedDevices.localDevices.create(name) {
                 device = "Nexus 4"
                 apiLevel = apiLevelIt
-                val systemImageConfig: Pair<String?, Boolean?> = when (apiLevel) {
-                    35, 36 -> "aosp" to true
-                    else -> null to null
-                }
-                systemImageConfig.first?.also { systemImageSource = it }
-                systemImageConfig.second?.also { require64Bit = it }
             }
         }
     }
