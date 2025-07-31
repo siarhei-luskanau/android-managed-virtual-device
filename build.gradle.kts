@@ -1,5 +1,6 @@
 @file:Suppress("PropertyName")
 
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.util.Properties
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -39,16 +40,17 @@ val CI_GRADLE = "CI_GRADLE"
 
 tasks.register("ciBuildAndTest") {
     group = CI_GRADLE
+    val injected = project.objects.newInstance<Injected>()
     doLast {
-        gradlew(
+        injected.gradlew(
             "clean",
             "ktlintCheck",
             "detekt",
             "lint",
             "assembleDebug"
         )
-        gradlew("test")
-        gradlew(
+        injected.gradlew("test")
+        injected.gradlew(
             "koverXmlReport",
             "koverHtmlReport",
             "koverVerify"
@@ -58,36 +60,35 @@ tasks.register("ciBuildAndTest") {
 
 tasks.register("ciSdkManagerLicenses") {
     group = CI_GRADLE
+    val injected = project.objects.newInstance<Injected>()
     doLast {
-        val sdkDirPath = getAndroidSdkPath(rootDir = rootDir)
-        getSdkManagerFile(rootDir = rootDir)?.let { sdkManagerFile ->
-            val yesInputStream =
-                object : InputStream() {
-                    private val yesString = "y\n"
-                    private var counter = 0
-
-                    override fun read(): Int = yesString[counter % 2].also { counter++ }.code
-                }
-            providers.exec {
-                executable = sdkManagerFile.absolutePath
-                args = listOf("--list", "--sdk_root=$sdkDirPath")
+        val sdkDirPath = injected.getAndroidSdkPath()
+        injected.getSdkManagerFile()?.let { sdkManagerFile ->
+            val yesInputStream = object : InputStream() {
+                private val yesString = "y\n"
+                private var counter = 0
+                override fun read(): Int = yesString[counter % 2].also { counter++ }.code
+            }
+            injected.execOperations.exec {
+                commandLine =
+                    listOf(sdkManagerFile.absolutePath, "--list", "--sdk_root=$sdkDirPath")
                 println("exec: ${this.commandLine.joinToString(separator = " ")}")
-            }.apply { println("ExecResult: ${this.result.get()}") }
-            @Suppress("DEPRECATION")
-            exec {
-                executable = sdkManagerFile.absolutePath
-                args = listOf("--licenses", "--sdk_root=$sdkDirPath")
+            }.apply { println("ExecResult: ${this.exitValue}") }
+            injected.execOperations.exec {
+                commandLine =
+                    listOf(sdkManagerFile.absolutePath, "--licenses", "--sdk_root=$sdkDirPath")
                 standardInput = yesInputStream
                 println("exec: ${this.commandLine.joinToString(separator = " ")}")
-            }.apply { println("ExecResult: $this") }
+            }.apply { println("ExecResult: ${this.exitValue}") }
         }
     }
 }
 
 tasks.register("devAll") {
     group = CI_GRADLE
+    val injected = project.objects.newInstance<Injected>()
     doLast {
-        gradlew(
+        injected.gradlew(
             "clean",
             "ktlintFormat",
             "ciBuildAndTest"
@@ -97,16 +98,17 @@ tasks.register("devAll") {
 
 tasks.register("devEmulatorAll") {
     group = CI_GRADLE
+    val injected = project.objects.newInstance<Injected>()
     doLast {
-        gradlew("ciSdkManagerLicenses")
-        gradlew("cleanManagedDevices", "--unused-only")
+        injected.gradlew("ciSdkManagerLicenses")
+        injected.gradlew("cleanManagedDevices", "--unused-only")
         (27..35).forEach { apiLevelIt ->
             val name =
                 listOf(
                     "managedVirtualDevice",
                     apiLevelIt.toString()
                 ).joinToString(separator = "")
-            gradlew(
+            injected.gradlew(
                 "${name}DebugAndroidTest",
                 "-Pandroid.testInstrumentationRunnerArguments.class=" +
                     "siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest",
@@ -114,62 +116,94 @@ tasks.register("devEmulatorAll") {
                 "--enable-display"
             )
         }
-        gradlew("cleanManagedDevices")
+        injected.gradlew("cleanManagedDevices")
     }
 }
 
-fun gradlew(vararg tasks: String, addToSystemProperties: Map<String, String>? = null) {
-    providers.exec {
-        executable = File(
-            project.rootDir,
-            if (Os.isFamily(Os.FAMILY_WINDOWS)) "gradlew.bat" else "gradlew"
-        )
-            .also { it.setExecutable(true) }
-            .absolutePath
-        args = mutableListOf<String>().also { mutableArgs ->
-            mutableArgs.addAll(tasks)
-            addToSystemProperties?.toList()?.map { "-D${it.first}=${it.second}" }?.let {
-                mutableArgs.addAll(it)
-            }
-            mutableArgs.add("--stacktrace")
-        }
-        val sdkDirPath = Properties().apply {
-            val propertiesFile = File(rootDir, "local.properties")
-            if (propertiesFile.exists()) {
-                load(propertiesFile.inputStream())
-            }
-        }.getProperty("sdk.dir")
-        if (sdkDirPath != null) {
-            val platformToolsDir = "$sdkDirPath${File.separator}platform-tools"
-            val pahtEnvironment = System.getenv("PATH").orEmpty()
-            if (!pahtEnvironment.contains(platformToolsDir)) {
-                environment = environment.toMutableMap()
-                    .apply { put("PATH", "$platformToolsDir:$pahtEnvironment") }
-            }
-        }
-        if (System.getenv("JAVA_HOME") == null) {
-            System.getProperty("java.home")?.let { javaHome ->
-                environment = environment.toMutableMap().apply { put("JAVA_HOME", javaHome) }
-            }
-        }
-        if (System.getenv("ANDROID_HOME") == null) {
-            environment = environment.toMutableMap().apply { put("ANDROID_HOME", sdkDirPath) }
-        }
-        println("commandLine: ${this.commandLine.joinToString(separator = " ")}")
-    }.apply { println("ExecResult: ${this.result.get()}") }
-}
+abstract class Injected {
 
-fun getAndroidSdkPath(rootDir: File): String? = Properties().apply {
-    val propertiesFile = File(rootDir, "local.properties")
-    if (propertiesFile.exists()) {
-        load(propertiesFile.inputStream())
+    @get:Inject abstract val fs: FileSystemOperations
+
+    @get:Inject abstract val execOperations: ExecOperations
+
+    @get:Inject abstract val projectLayout: ProjectLayout
+
+    fun gradlew(vararg tasks: String, addToSystemProperties: Map<String, String>? = null) {
+        execOperations.exec {
+            commandLine = mutableListOf<String>().also { mutableArgs ->
+                mutableArgs.add(
+                    projectLayout.projectDirectory.file(
+                        if (Os.isFamily(Os.FAMILY_WINDOWS)) "gradlew.bat" else "gradlew"
+                    ).asFile.path
+                )
+                mutableArgs.addAll(tasks)
+                addToSystemProperties?.toList()?.map { "-D${it.first}=${it.second}" }?.let {
+                    mutableArgs.addAll(it)
+                }
+                mutableArgs.add("--stacktrace")
+            }
+            val sdkDirPath = Properties().apply {
+                val propertiesFile = projectLayout.projectDirectory.file("local.properties").asFile
+                if (propertiesFile.exists()) {
+                    load(propertiesFile.inputStream())
+                }
+            }.getProperty("sdk.dir")
+            if (sdkDirPath != null) {
+                val platformToolsDir = "$sdkDirPath${File.separator}platform-tools"
+                val pathEnvironment = System.getenv("PATH").orEmpty()
+                if (!pathEnvironment.contains(platformToolsDir)) {
+                    environment = environment.toMutableMap().apply {
+                        put("PATH", "$platformToolsDir:$pathEnvironment")
+                    }
+                }
+            }
+            if (System.getenv("JAVA_HOME") == null) {
+                System.getProperty("java.home")?.let { javaHome ->
+                    environment = environment.toMutableMap().apply {
+                        put("JAVA_HOME", javaHome)
+                    }
+                }
+            }
+            if (System.getenv("ANDROID_HOME") == null) {
+                environment = environment.toMutableMap().apply {
+                    put("ANDROID_HOME", sdkDirPath)
+                }
+            }
+            println("commandLine: ${this.commandLine}")
+        }.apply { println("ExecResult: ${this.exitValue}") }
     }
-}.getProperty("sdk.dir").let { propertiesSdkDirPath ->
-    (propertiesSdkDirPath ?: System.getenv("ANDROID_HOME"))
-}
 
-fun getSdkManagerFile(rootDir: File): File? =
-    getAndroidSdkPath(rootDir = rootDir)?.let { sdkDirPath ->
+    fun runExec(commands: List<String>): String = object : ByteArrayOutputStream() {
+        override fun write(p0: ByteArray, p1: Int, p2: Int) {
+            print(String(p0, p1, p2))
+            super.write(p0, p1, p2)
+        }
+    }.let { resultOutputStream ->
+        execOperations.exec {
+            if (System.getenv("JAVA_HOME") == null) {
+                System.getProperty("java.home")?.let { javaHome ->
+                    environment = environment.toMutableMap().apply {
+                        put("JAVA_HOME", javaHome)
+                    }
+                }
+            }
+            commandLine = commands
+            standardOutput = resultOutputStream
+            println("commandLine: ${this.commandLine.joinToString(separator = " ")}")
+        }.apply { println("ExecResult: $this") }
+        String(resultOutputStream.toByteArray())
+    }
+
+    fun getAndroidSdkPath(): String? = Properties().apply {
+        val propertiesFile = File(projectLayout.projectDirectory.asFile, "local.properties")
+        if (propertiesFile.exists()) {
+            load(propertiesFile.inputStream())
+        }
+    }.getProperty("sdk.dir").let { propertiesSdkDirPath ->
+        (propertiesSdkDirPath ?: System.getenv("ANDROID_HOME"))
+    }
+
+    fun getSdkManagerFile(): File? = getAndroidSdkPath()?.let { sdkDirPath ->
         println("sdkDirPath: $sdkDirPath")
         val files = File(sdkDirPath).walk().filter { file ->
             file.path.contains("cmdline-tools") && file.path.endsWith("sdkmanager")
@@ -179,3 +213,4 @@ fun getSdkManagerFile(rootDir: File): File? =
         println("sdkmanagerFile: $sdkmanagerFile")
         sdkmanagerFile
     }
+}
