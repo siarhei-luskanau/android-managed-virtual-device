@@ -20,7 +20,9 @@ jobs:
       contents: write
     steps:
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.head_ref }}
 
       - uses: actions/setup-java@v4
         with:
@@ -58,7 +60,7 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Enable KVM group perms
         if: contains(matrix.os, 'ubuntu')
