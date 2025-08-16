@@ -1,7 +1,7 @@
 package siarhei.luskanau.managed.virtual.device
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 /**
  * Example local unit test, which will execute on the development machine (host).
