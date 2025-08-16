@@ -55,6 +55,18 @@ jobs:
         experimental: [ false ]
         os: [ ubuntu-latest ]
         include:
+          - managed-virtual-device: 34
+            experimental: true
+            os: ubuntu-26.04-arm
+          - managed-virtual-device: 35
+            experimental: true
+            os: ubuntu-26.04-arm
+          - managed-virtual-device: 36
+            experimental: true
+            os: ubuntu-26.04-arm
+          - managed-virtual-device: 37
+            experimental: false
+            os: ubuntu-26.04-arm
           - managed-virtual-device: 37
             experimental: true
             os: ubuntu-latest
