@@ -29,7 +29,7 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
 
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v5
 
       - run: ./gradlew wrapper --gradle-version latest --stacktrace
       - run: ./gradlew wrapper --gradle-version latest --stacktrace
@@ -75,7 +75,7 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
         if: ${{ matrix.os != 'self-hosted' }}
 
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v5
 
       - run: ./gradlew ciSdkManagerLicenses --stacktrace
 
