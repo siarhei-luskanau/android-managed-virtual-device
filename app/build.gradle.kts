@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
 
@@ -31,9 +30,6 @@ android {
         sourceCompatibility = JavaVersion.valueOf(libs.versions.build.javaVersion.get())
         targetCompatibility = JavaVersion.valueOf(libs.versions.build.javaVersion.get())
     }
-    kotlinOptions {
-        jvmTarget = libs.versions.build.jvmTarget.get()
-    }
     buildFeatures {
         compose = true
     }
@@ -41,15 +37,12 @@ android {
         unitTests {
             all { test: Test ->
                 test.testLogging.events =
-                    org.gradle.api.tasks.testing.logging.TestLogEvent.values().toSet()
+                    org.gradle.api.tasks.testing.logging.TestLogEvent.entries.toSet()
                 test.testLogging.exceptionFormat =
                     org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
             }
         }
         animationsDisabled = true
-        emulatorSnapshots {
-            enableForTestFailures = false
-        }
         (27..36).forEach { apiLevelIt ->
             val name =
                 listOf(
@@ -69,7 +62,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(platform(libs.androidx.compose.bom))
-    testImplementation(kotlin("test"))
-    androidTestImplementation(kotlin("test"))
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

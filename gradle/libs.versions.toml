@@ -1,6 +1,6 @@
 [versions]
 activity = "1.11.0"
-agp = "8.13.0"
+agp = "9.0.0-alpha11"
 build-android-compileSdk = "36"
 build-android-minSdk = "26"
 build-android-targetSdk = "36"
@@ -9,6 +9,7 @@ build-jvmTarget = "21"
 compose-bom = "2025.10.00"
 detekt = "1.23.8"
 espresso = "3.7.0"
+junit = "4.13.2"
 kotlin = "2.2.20"
 kotlinx-kover = "0.9.3"
 ktlint = "1.7.1"
@@ -19,11 +20,11 @@ androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", versi
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+junit = { module = "junit:junit", version.ref = "junit" }
 ktlint-cli = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinx-kover" }
