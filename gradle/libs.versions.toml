@@ -10,7 +10,6 @@ compose-bom = "2025.10.01"
 detekt = "1.23.8"
 espresso = "3.7.0"
 kotlin = "2.2.21"
-kotlinx-kover = "0.9.3"
 ktlint = "1.7.1"
 
 [libraries]
@@ -26,4 +25,3 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinx-kover" }
