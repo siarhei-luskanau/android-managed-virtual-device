@@ -47,9 +47,6 @@ android {
             }
         }
         animationsDisabled = true
-        emulatorSnapshots {
-            enableForTestFailures = false
-        }
         (27..36).forEach { apiLevelIt ->
             val name =
                 listOf(

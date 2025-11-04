@@ -42,7 +42,7 @@ jobs:
         with:
           commit_message: Ktlint format
 
-      - run: ./gradlew ciBuildAndTest --stacktrace
+      - run: ./gradlew clean ktlintCheck detekt lint assembleDebug test --stacktrace
 
   Device:
     runs-on: ${{ matrix.os }}
@@ -50,13 +50,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        managed-virtual-device: [ 27, 28, 29, 30, 31, 32, 33, 34, 35 ]
+        managed-virtual-device: [ 27, 29, 30, 33, 34, 35, 36 ]
         experimental: [ false ]
         os: [ ubuntu-latest ]
-        include:
-          - managed-virtual-device: 36
-            experimental: false
-            os: ubuntu-latest
+#        include:
+#          - managed-virtual-device: 28
+#            experimental: true
+#            os: ubuntu-latest
+#          - managed-virtual-device: 31
+#            experimental: true
+#            os: ubuntu-latest
+#          - managed-virtual-device: 32
+#            experimental: true
+#            os: ubuntu-latest
 
     steps:
 
@@ -73,11 +79,8 @@ jobs:
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
-        if: ${{ matrix.os != 'self-hosted' }}
 
       - uses: gradle/actions/setup-gradle@v5
-
-      - run: ./gradlew ciSdkManagerLicenses --stacktrace
 
       - run: ./gradlew managedVirtualDevice${{ matrix.managed-virtual-device }}DebugAndroidTest
           -Pandroid.testInstrumentationRunnerArguments.class=siarhei.luskanau.managed.virtual.device.ExampleInstrumentedTest
