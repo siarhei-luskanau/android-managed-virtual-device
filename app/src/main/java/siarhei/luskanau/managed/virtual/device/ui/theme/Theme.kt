@@ -48,6 +48,7 @@ fun MyApplicationTheme(
         }
 
         darkTheme -> DarkColorScheme
+
         else -> LightColorScheme
     }
 
