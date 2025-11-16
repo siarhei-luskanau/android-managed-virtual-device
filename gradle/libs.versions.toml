@@ -10,7 +10,7 @@ compose-bom = "2025.11.00"
 detekt = "1.23.8"
 espresso = "3.7.0"
 kotlin = "2.2.21"
-ktlint = "1.7.1"
+ktlint = "1.8.0"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
