@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
 
@@ -38,7 +37,7 @@ android {
         unitTests {
             all { test: Test ->
                 test.testLogging.events =
-                    org.gradle.api.tasks.testing.logging.TestLogEvent.values().toSet()
+                    org.gradle.api.tasks.testing.logging.TestLogEvent.entries.toSet()
                 test.testLogging.exceptionFormat =
                     org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
             }
@@ -63,7 +62,5 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(platform(libs.androidx.compose.bom))
-    testImplementation(kotlin("test"))
-    androidTestImplementation(kotlin("test"))
     androidTestImplementation(libs.androidx.espresso.core)
 }
