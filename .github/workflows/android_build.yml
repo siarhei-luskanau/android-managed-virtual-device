@@ -50,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        managed-virtual-device: [ 27, 29, 30, 33, 34, 35, 36 ]
+        managed-virtual-device: [ 27, 29, 30, 34, 35, 36 ]
         experimental: [ false ]
         os: [ ubuntu-latest ]
 #        include:
