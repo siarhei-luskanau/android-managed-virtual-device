@@ -1,6 +1,6 @@
 [versions]
 activity = "1.12.2"
-agp = "8.13.2"
+agp = "9.0.0"
 build-android-compileSdk = "36"
 build-android-minSdk = "26"
 build-android-targetSdk = "36"
@@ -23,5 +23,4 @@ ktlint-cli = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

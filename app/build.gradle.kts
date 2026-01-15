@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
 
@@ -63,7 +62,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(platform(libs.androidx.compose.bom))
-    testImplementation(kotlin("test"))
-    androidTestImplementation(kotlin("test"))
+    testImplementation(kotlin("test-junit"))
+    androidTestImplementation(kotlin("test-junit"))
     androidTestImplementation(libs.androidx.espresso.core)
 }
