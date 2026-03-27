@@ -1,9 +1,9 @@
 [versions]
 activity = "1.13.0"
 agp = "9.1.0"
-build-android-compileSdk = "36"
+build-android-compileSdk = "37"
 build-android-minSdk = "26"
-build-android-targetSdk = "36"
+build-android-targetSdk = "37"
 build-javaVersion = "VERSION_21"
 build-jvmTarget = "21"
 compose-bom = "2026.03.01"

@@ -43,7 +43,7 @@ android {
             }
         }
         animationsDisabled = true
-        (27..36).forEach { apiLevelIt ->
+        (27..37).forEach { apiLevelIt ->
             val name =
                 listOf(
                     "managedVirtualDevice",

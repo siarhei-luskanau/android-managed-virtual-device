@@ -47,7 +47,7 @@ jobs:
         managed-virtual-device: [ 27, 29, 30, 34, 35, 36 ]
         experimental: [ false ]
         os: [ ubuntu-latest ]
-#        include:
+        include:
 #          - managed-virtual-device: 28
 #            experimental: true
 #            os: ubuntu-latest
@@ -55,6 +55,9 @@ jobs:
 #            experimental: true
 #            os: ubuntu-latest
 #          - managed-virtual-device: 32
+#            experimental: true
+#            os: ubuntu-latest
+#          - managed-virtual-device: 37
 #            experimental: true
 #            os: ubuntu-latest
 
