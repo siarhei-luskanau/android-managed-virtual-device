@@ -37,7 +37,7 @@ android {
         unitTests {
             all { test: Test ->
                 test.testLogging.events =
-                    org.gradle.api.tasks.testing.logging.TestLogEvent.values().toSet()
+                    org.gradle.api.tasks.testing.logging.TestLogEvent.entries.toSet()
                 test.testLogging.exceptionFormat =
                     org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
             }
