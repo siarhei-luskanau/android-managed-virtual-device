@@ -6,6 +6,7 @@ plugins {
 android {
     namespace = "siarhei.luskanau.managed.virtual.device"
     compileSdk = libs.versions.build.android.compileSdk.get().toInt()
+    compileSdkMinor = libs.versions.build.android.compileSdkMinor.get().toInt()
 
     defaultConfig {
         applicationId = "siarhei.luskanau.managed.virtual.device"
@@ -37,13 +38,13 @@ android {
         unitTests {
             all { test: Test ->
                 test.testLogging.events =
-                    org.gradle.api.tasks.testing.logging.TestLogEvent.values().toSet()
+                    org.gradle.api.tasks.testing.logging.TestLogEvent.entries.toSet()
                 test.testLogging.exceptionFormat =
                     org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
             }
         }
         animationsDisabled = true
-        (27..37).forEach { apiLevelIt ->
+        (27..37).forEach(action = { apiLevelIt ->
             val name =
                 listOf(
                     "managedVirtualDevice",
@@ -53,7 +54,7 @@ android {
                 device = "Nexus 4"
                 apiLevel = apiLevelIt
             }
-        }
+        })
     }
 }
 
