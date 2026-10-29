@@ -4,6 +4,7 @@ include(
 )
 
 pluginManagement {
+    includeBuild("convention-android-emulator")
     repositories {
         gradlePluginPortal()
         google()
