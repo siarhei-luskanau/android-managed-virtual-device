@@ -7,4 +7,8 @@ plugins {
 allprojects {
     apply(from = "$rootDir/ktlint.gradle")
     apply(plugin = "io.gitlab.arturbosch.detekt")
+    detekt {
+        parallel = true
+        ignoreFailures = false
+    }
 }
