@@ -15,9 +15,13 @@ env:
 jobs:
 
   BuildAndTest:
-    runs-on: ubuntu-latest
     permissions:
       contents: write
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, ubuntu-26.04-arm ]
     steps:
 
       - uses: actions/checkout@v7
@@ -30,6 +34,9 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
 
       - uses: gradle/actions/setup-gradle@v6
+
+      - run: ./gradlew setupAndroidCmdlineTools --stacktrace
+        if: contains(matrix.os, 'ubuntu-26.04-arm')
 
       - run: ./gradlew ktlintFormat --stacktrace
       - uses: stefanzweifel/git-auto-commit-action@v7
