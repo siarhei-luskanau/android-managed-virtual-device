@@ -3,8 +3,7 @@
 import convention.android.emulator.AndroidSdkHelper
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
-import kotlin.apply
-import org.gradle.kotlin.dsl.newInstance
+import java.util.Properties
 
 plugins {
     id("androidEmulatorConvention")
@@ -47,6 +46,32 @@ tasks.register("setupAndroidCmdlineTools") {
     }
 }
 
+tasks.register("ciSdkManagerLicenses") {
+    group = CI_GRADLE
+    val injected = project.objects.newInstance<Injected>()
+    doLast {
+        val sdkDirPath = injected.getAndroidSdkPath()
+        injected.getSdkManagerFile()?.let { sdkManagerFile ->
+            val yesInputStream = object : InputStream() {
+                private val yesString = "y\n"
+                private var counter = 0
+                override fun read(): Int = yesString[counter % 2].also { counter++ }.code
+            }
+            injected.execOperations.exec {
+                commandLine =
+                    listOf(sdkManagerFile.absolutePath, "--list", "--sdk_root=$sdkDirPath")
+                println("exec: ${this.commandLine.joinToString(separator = " ")}")
+            }.apply { println("ExecResult: ${this.exitValue}") }
+            injected.execOperations.exec {
+                commandLine =
+                    listOf(sdkManagerFile.absolutePath, "--licenses", "--sdk_root=$sdkDirPath")
+                standardInput = yesInputStream
+                println("exec: ${this.commandLine.joinToString(separator = " ")}")
+            }.apply { println("ExecResult: ${this.exitValue}") }
+        }
+    }
+}
+
 abstract class Injected {
 
     @get:Inject abstract val execOperations: ExecOperations
@@ -80,5 +105,25 @@ abstract class Injected {
             println("commandLine: ${this.commandLine.joinToString(separator = " ")}")
         }.apply { println("ExecResult: $this") }
         String(resultOutputStream.toByteArray())
+    }
+
+    fun getAndroidSdkPath(): String? = Properties().apply {
+        val propertiesFile = File(projectLayout.projectDirectory.asFile, "local.properties")
+        if (propertiesFile.exists()) {
+            load(propertiesFile.inputStream())
+        }
+    }.getProperty("sdk.dir").let { propertiesSdkDirPath ->
+        (propertiesSdkDirPath ?: System.getenv("ANDROID_HOME"))
+    }
+
+    fun getSdkManagerFile(): File? = getAndroidSdkPath()?.let { sdkDirPath ->
+        println("sdkDirPath: $sdkDirPath")
+        val files = File(sdkDirPath).walk().filter { file ->
+            file.path.contains("cmdline-tools") && file.path.endsWith("sdkmanager")
+        }
+        files.forEach { println("walk: ${it.absolutePath}") }
+        val sdkmanagerFile = files.firstOrNull()
+        println("sdkmanagerFile: $sdkmanagerFile")
+        sdkmanagerFile
     }
 }
