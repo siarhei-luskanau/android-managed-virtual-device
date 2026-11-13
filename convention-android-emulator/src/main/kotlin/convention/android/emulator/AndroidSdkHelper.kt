@@ -11,6 +11,11 @@ import org.gradle.api.file.ProjectLayout
 class AndroidSdkHelper(projectLayout: ProjectLayout, private val execWrapper: ExecWrapper) {
 
     private val androidSdkConfig = AndroidSdkConfig(projectLayout = projectLayout)
+    private val addToSystemEnvironment = mapOf(
+        "HOME" to System.getenv("HOME"),
+        "ANDROID_SDK_HOME" to androidSdkConfig.sdkDirPath,
+        "ANDROID_AVD_HOME" to "${projectLayout.projectDirectory.asFile}/.android/avd"
+    ).filterValues { it.isNotEmpty() }
 
     fun setupAndroidCmdlineTools() {
         androidSdkConfig.printSdkPath()
@@ -83,6 +88,225 @@ class AndroidSdkHelper(projectLayout: ProjectLayout, private val execWrapper: Ex
             inputStream = yesInputStream()
         ) // .also { println("ExecOutput: $it") }
     }
+
+    fun setupAndroidSDK(avdName: String? = null) {
+        androidSdkConfig.printSdkPath()
+        execWrapper.exec(
+            commandLine = listOf(
+                androidSdkConfig.sdkmanager.absolutePath,
+                "--update",
+                "--sdk_root=${androidSdkConfig.sdkDirPath}"
+            ),
+            inputStream = yesInputStream()
+        ).also { println("ExecOutput: $it") }
+
+        execWrapper.exec(
+            commandLine = listOf(
+                androidSdkConfig.sdkmanager.absolutePath,
+                "--licenses",
+                "--sdk_root=${androidSdkConfig.sdkDirPath}"
+            ),
+            inputStream = yesInputStream()
+        ).also { println("ExecOutput: $it") }
+
+        execWrapper.exec(
+            commandLine = mutableListOf(
+                androidSdkConfig.sdkmanager.absolutePath,
+                "tools",
+                "platform-tools",
+                "build-tools;${AndroidSdkConst.BUILD_TOOLS_VERSION}",
+                "platforms;android-${AndroidSdkConst.PLATFORM}"
+            ).apply {
+                val emulatorConfig = ANDROID_EMULATORS.find { it.avdName == avdName }
+                if (emulatorConfig != null) {
+                    add("emulator")
+                    add(emulatorConfig.sdkId)
+                }
+            }.apply {
+                add("--sdk_root=${androidSdkConfig.sdkDirPath}")
+            },
+            inputStream = yesInputStream()
+        ) // .also { println("ExecOutput: $it") }
+
+        execWrapper.exec(
+            commandLine = listOf(
+                androidSdkConfig.sdkmanager.absolutePath,
+                "--list",
+                "--sdk_root=${androidSdkConfig.sdkDirPath}"
+            ),
+            inputStream = yesInputStream()
+        ).also { println("ExecOutput: $it") }
+    }
+
+    fun setupAndroidEmulator(avdName: String) {
+        androidSdkConfig.printSdkPath()
+        ANDROID_EMULATORS.filter {
+            if (avdName.isNotEmpty()) {
+                it.avdName == avdName
+            } else {
+                true
+            }
+        }.forEach { emulatorConfig ->
+            execWrapper.exec(
+                commandLine = listOf(
+                    androidSdkConfig.avdmanager.absolutePath,
+                    "-v",
+                    "create",
+                    "avd",
+                    "--force",
+                    "-n",
+                    emulatorConfig.avdName,
+                    "--device",
+                    emulatorConfig.deviceType,
+                    "-k",
+                    emulatorConfig.sdkId
+                ),
+                addToSystemEnvironment = addToSystemEnvironment
+            ).also { println("ExecOutput: $it") }
+        }
+
+        execWrapper.exec(
+            commandLine = listOf(androidSdkConfig.avdmanager.absolutePath, "-v", "list", "avd"),
+            addToSystemEnvironment = addToSystemEnvironment
+        ).also { println("ExecOutput: $it") }
+        execWrapper.exec(
+            commandLine = listOf(androidSdkConfig.emulator.absolutePath, "-list-avds"),
+            addToSystemEnvironment = addToSystemEnvironment
+        ).also { println("ExecOutput: $it") }
+    }
+
+    fun runAndroidEmulator(avdName: String) {
+        androidSdkConfig.printSdkPath()
+        execWrapper.exec(
+            commandLine = listOf(androidSdkConfig.adb.absolutePath, "start-server")
+        ).also { println("ExecOutput: $it") }
+
+        val emulatorConfig = requireNotNull(ANDROID_EMULATORS.find { it.avdName == avdName })
+            .also { println("EmulatorConfig: $it") }
+
+        val commandArgs = mutableListOf(
+            androidSdkConfig.emulator.absolutePath,
+            "-avd",
+            emulatorConfig.avdName,
+            "-port",
+            emulatorConfig.port
+        )
+        commandArgs.addAll(
+            mutableListOf(
+                "-accel",
+                "auto",
+                "-gpu",
+                "swiftshader_indirect",
+                "-dns-server",
+                "8.8.8.8",
+                "-no-audio",
+                "-no-boot-anim",
+                "-screen",
+                "multi-touch",
+                "-no-snapshot"
+            ).also {
+                if (true.toString().equals(other = System.getenv("CI"), ignoreCase = true)) {
+                    it.add("-no-window")
+                }
+            }
+        )
+        execWrapper.exec(
+            commandLine = commandArgs,
+            addToSystemEnvironment = addToSystemEnvironment
+        ).also { println("ExecOutput: $it") }
+    }
+
+    fun waitAndroidEmulator() {
+        androidSdkConfig.printSdkPath()
+        var isEmulatorFound = false
+        for (i in 1..700) {
+            Thread.sleep(1_000)
+            var result: String? = null
+            getDevicesList().also {
+                if (it.isEmpty()) {
+                    println("WaitAndroidEmulator: Wait $i: No emulators found!")
+                }
+            }.forEach { emulatorAttributes ->
+                println("WaitAndroidEmulator: Wait $i: $emulatorAttributes")
+                if (emulatorAttributes.contains("offline")) {
+                    println("WaitAndroidEmulator: offline")
+                } else {
+                    result = execWrapper.exec(
+                        commandLine = listOf(
+                            androidSdkConfig.adb.absolutePath,
+                            "-s",
+                            emulatorAttributes.first(),
+                            "wait-for-device",
+                            "shell",
+                            "getprop sys.boot_completed"
+                        )
+                    ).also { println("ExecOutput: $it") }.trim()
+                }
+            }
+            println("sys.boot_completed = $result")
+            if (result == "1") {
+                println("Emulator booted")
+                isEmulatorFound = true
+                break
+            }
+        }
+        if (isEmulatorFound.not()) {
+            throw IllegalStateException("Emulator not found")
+        }
+    }
+
+    fun killAndroidEmulator() {
+        androidSdkConfig.printSdkPath()
+        getDevicesList().forEach { emulatorAttributes ->
+            println("KillAndroidEmulator: $emulatorAttributes")
+            execWrapper.exec(
+                commandLine = listOf(
+                    androidSdkConfig.adb.absolutePath,
+                    "-s",
+                    emulatorAttributes.first(),
+                    "emu",
+                    "kill"
+                )
+            ).also { println("ExecOutput: $it") }
+        }
+    }
+
+    fun deleteAndroidEmulator() {
+        ANDROID_EMULATORS.forEach { emulatorConfig ->
+            runCatching {
+                execWrapper.exec(
+                    commandLine = listOf(
+                        androidSdkConfig.avdmanager.absolutePath,
+                        "-v",
+                        "delete",
+                        "avd",
+                        "-n",
+                        emulatorConfig.avdName
+                    ),
+                    addToSystemEnvironment = addToSystemEnvironment
+                ).also { println("ExecOutput: $it") }
+            }
+        }
+
+        execWrapper.exec(
+            commandLine = listOf(androidSdkConfig.avdmanager.absolutePath, "-v", "list", "avd"),
+            addToSystemEnvironment = addToSystemEnvironment
+        ).also { println("ExecOutput: $it") }
+    }
+
+    private fun getDevicesList(): List<List<String>> =
+        execWrapper.exec(commandLine = listOf(androidSdkConfig.adb.absolutePath, "devices", "-l"))
+            .let { devicesOutput ->
+                println("ExecResult: $devicesOutput")
+                String(devicesOutput.toByteArray())
+                    .split("\n")
+                    .filter { it.contains("emulator-") }
+                    .map { deviceString ->
+                        deviceString.split(" ")
+                            .map { it.trim() }
+                            .filter { it.isNotBlank() }
+                    }
+            }
 
     companion object {
         private fun yesInputStream() = object : InputStream() {
